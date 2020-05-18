@@ -24,22 +24,34 @@ const upload = multer({
 
     cb(undefined, true)
   }
-})
+}).fields([
+  {
+    name: "image_1",
+    maxCount: 1,
+  },{
+    name: "image_2",
+    maxCount: 1,
+  }
+])
 
-app.post('/detect', upload.array('image', 2), async (req, res, next) => {
+app.post('/detect', upload, async (req, res, next) => {
   try {
-    if (!req.files || req.files.length != 2) {
+    if (!req.files || !req.files.image_1 || !req.files.image_2) {
       return res.status(400).send({ error: "must be 2 images" })
     }
 
     res.status(200).send({
-      score: await evalSimilarity(req.files[0].buffer, req.files[1].buffer)
+      score: await evalSimilarity(req.files.image_1[0].buffer, req.files.image_2[0].buffer)
     })
   } catch (error) {
     next(error)
   }
 }, (error, req, res, next) => {
-  res.status(400).send({ error: "fail to find face" })
+  if (error.name == "MulterError"){
+    return res.status(400).send({ error: error })
+  }
+
+  res.status(400).send({ error: "fail to find faces" })
 })
 
 app.listen(port)

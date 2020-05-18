@@ -28,10 +28,12 @@ paths:
             schema:
               type: object
               properties:
-                image:
+                image_1:
+                  name: "image"
                   type: string
                   format: binary
-                image:
+                image_2:
+                  name: "image"
                   type: string
                   format: binary
 
