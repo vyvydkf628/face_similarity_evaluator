@@ -42,10 +42,12 @@ paths:
          '200':
             description: success
             content:
-              images/*:
+              application/json:
                   schema:
-                    type: string
-                    format: binary
+                    type: object
+                    properties:
+                      score:
+                        type: number
          '400':
             description: Bad request (Can not load images)
          '500':
